@@ -480,6 +480,7 @@ function getDefaultFeaturesConfig() {
     uaMode: 'tizen',
     navigationFix: true,
     textScale: 'medium',
+    navigationMode: 'directional',
   };
 }
 
@@ -824,6 +825,13 @@ function formatDisplayValue(row, value) {
 }
 
 /**
+ * Rows that are only titles and cannot be changed
+ */
+function isHeaderOnlyRow(row) {
+  return !!row && (row.type === 'category' || row.type === 'userscript-category');
+}
+
+/**
  * Navigate preferences (Up/Down)
  * Now includes Close button as final navigation target
  */
@@ -831,6 +839,16 @@ function navigatePreferences(direction) {
   var visibleRows = getVisibleRowsWithSections();
   var totalItems = visibleRows.length + 1; // +1 for Close button
   var newIndex = prefsState.currentRow + direction;
+
+  // Skip category titles (e.g. "Navigation", "Input"): they are only labels,
+  // landing on them made it look like the remote did nothing.
+  while (newIndex >= 0 && newIndex < visibleRows.length && isHeaderOnlyRow(visibleRows[newIndex])) {
+    newIndex += direction;
+  }
+  if (newIndex < 0) {
+    // Nothing selectable above: stay where we are
+    newIndex = prefsState.currentRow;
+  }
 
   // Clamp to valid range (0 to totalItems-1)
   if (newIndex < 0) newIndex = 0;
@@ -902,7 +920,13 @@ function activatePreferenceRow(rowEl) {
   }
 
   if (row.type === 'category') {
-    // Section category headers are not interactive
+    // Category titles are not settings: move to the first setting below
+    // so OK on a title does something visible.
+    var nextIndex = index + 1;
+    if (nextIndex < visibleRows.length && !isHeaderOnlyRow(visibleRows[nextIndex])) {
+      prefsState.currentRow = nextIndex;
+      focusPreferencesRow(nextIndex);
+    }
     return;
   }
 

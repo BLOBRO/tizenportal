@@ -212,6 +212,7 @@ function getDefaults() {
     uaMode: 'tizen',
     navigationFix: true,
     textScale: 'medium',
+    navigationMode: 'directional',
   };
 }
 

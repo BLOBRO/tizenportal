@@ -46,7 +46,7 @@
     rowColumnBias: true,        // Prefer staying aligned in rows/columns
     alignmentWeight: 5,         // Weight for row/column alignment
     scrollBehavior: 'focus',    // 'scrollFirst' | 'focus'
-    fallback: 'none',           // 'none' | 'nearest' | 'wrap'
+    fallback: 'none',           // 'none' | 'nearest' | 'wrap' | 'halfplane'
     
     // Geometric mode specific options
     orthogonalWeightLR: 30,     // Orthogonal weight for left/right
@@ -95,8 +95,9 @@
     if (options.fallback && 
         options.fallback !== 'none' && 
         options.fallback !== 'nearest' && 
-        options.fallback !== 'wrap') {
-      throw new Error('Invalid fallback: must be "none", "nearest", or "wrap"');
+        options.fallback !== 'wrap' &&
+        options.fallback !== 'halfplane') {
+      throw new Error('Invalid fallback: must be "none", "nearest", "wrap" or "halfplane"');
     }
     
     // Merge configuration
@@ -160,9 +161,25 @@
     if (style.display === 'none' || style.visibility === 'hidden') {
       return false;
     }
+    if (parseFloat(style.opacity) === 0) {
+      return false;
+    }
     
     var rect = getRect(element);
-    return rect.width > 0 && rect.height > 0;
+    if (!(rect.width > 0 && rect.height > 0)) {
+      return false;
+    }
+    
+    // Elements moved off the page (e.g. "skip to content" links or closed
+    // off-canvas menus at left:-9999px) cannot be seen, so focusing them
+    // makes the focus look like it disappeared or jumped.
+    var scrollX = window.pageXOffset || 0;
+    var scrollY = window.pageYOffset || 0;
+    if (rect.right + scrollX <= 0 || rect.bottom + scrollY <= 0) {
+      return false;
+    }
+    
+    return true;
   }
 
   /**
@@ -323,9 +340,38 @@
       
       var candidateRect = getRect(candidate);
       
-      // Vector from cone origin to candidate center
-      var dx = candidateRect.centerX - coneOriginX;
-      var dy = candidateRect.centerY - coneOriginY;
+      // Candidates that overlap the origin on the perpendicular axis are
+      // always "straight ahead" (e.g. a link under a wide menu bar), as long
+      // as they lie beyond the origin's center in the direction of travel.
+      var overlapsPerp;
+      var beyond;
+      if (primaryAxis === 'x') {
+        overlapsPerp = candidateRect.bottom > originRect.top && candidateRect.top < originRect.bottom;
+        beyond = direction === 'right' ? candidateRect.centerX > originRect.centerX
+                                      : candidateRect.centerX < originRect.centerX;
+      } else {
+        overlapsPerp = candidateRect.right > originRect.left && candidateRect.left < originRect.right;
+        beyond = direction === 'down' ? candidateRect.centerY > originRect.centerY
+                                     : candidateRect.centerY < originRect.centerY;
+      }
+      if (overlapsPerp && beyond) {
+        filtered.push(candidate);
+        continue;
+      }
+      
+      // Cone apex: the point of the origin's edge closest to the candidate,
+      // so wide elements do not hide candidates that sit under their ends.
+      var apexX = coneOriginX;
+      var apexY = coneOriginY;
+      if (primaryAxis === 'x') {
+        apexY = Math.max(originRect.top, Math.min(originRect.bottom, candidateRect.centerY));
+      } else {
+        apexX = Math.max(originRect.left, Math.min(originRect.right, candidateRect.centerX));
+      }
+      
+      // Vector from cone apex to candidate center
+      var dx = candidateRect.centerX - apexX;
+      var dy = candidateRect.centerY - apexY;
       
       // Check if candidate is in the general direction
       var inGeneralDirection = false;
@@ -361,6 +407,44 @@
     }
     
     return filtered;
+  }
+
+  // ========================================================================
+  // DIRECTIONAL MODE - TIERED FILTERING (half-plane)
+  // ========================================================================
+
+  /**
+   * Filter candidates for remote-control navigation on real websites.
+   *
+   * A narrow cone skips links that are slightly offset (indented lists,
+   * content below a horizontal menu, staggered columns) and then jumps to a
+   * far away element that happens to be aligned. Instead, every element in
+   * the requested half-plane is a candidate and the distance score decides.
+   *
+   * Left/Right first stay on the same row: if any candidate overlaps the
+   * origin vertically, only those are kept, so Right does not drop to the
+   * next line while there is still something on the current one.
+   *
+   * @param {Element} origin - Origin element
+   * @param {Array<Element>} candidates - Candidate elements
+   * @param {string} direction - 'left', 'right', 'up', 'down'
+   * @returns {Array<Element>} Filtered candidates
+   */
+  function filterTiered(origin, candidates, direction) {
+    var halfPlane = filterByDirectionGeometric(origin, candidates, direction);
+    if (direction !== 'left' && direction !== 'right') {
+      return halfPlane;
+    }
+
+    var originRect = getRect(origin);
+    var sameRow = [];
+    for (var i = 0; i < halfPlane.length; i++) {
+      var r = getRect(halfPlane[i]);
+      if (r.bottom > originRect.top && r.top < originRect.bottom) {
+        sameRow.push(halfPlane[i]);
+      }
+    }
+    return sameRow.length ? sameRow : halfPlane;
   }
 
   // ========================================================================
@@ -502,6 +586,15 @@
   // ========================================================================
 
   /**
+   * Gap between two segments [a1, a2] and [b1, b2] (0 when they overlap)
+   */
+  function perpendicularGap(a1, a2, b1, b2) {
+    if (b2 < a1) return a1 - b2;
+    if (b1 > a2) return b1 - a2;
+    return 0;
+  }
+
+  /**
    * Calculate directional distance score
    * 
    * Uses weighted primary/secondary axis distances with overlap bonus
@@ -535,8 +628,10 @@
       }
       primaryDist = Math.max(0, primaryDist);
       
-      // Secondary axis: vertical offset
-      secondaryDist = Math.abs(candidateRect.centerY - originRect.centerY);
+      // Secondary axis: vertical gap between the rects (0 when they overlap),
+      // plus a small center offset to break ties
+      secondaryDist = perpendicularGap(originRect.top, originRect.bottom, candidateRect.top, candidateRect.bottom) +
+                      0.2 * Math.abs(candidateRect.centerY - originRect.centerY);
       
       // Overlap bonus: perpendicular axis overlap
       if (config.overlapBonus) {
@@ -564,8 +659,10 @@
       }
       primaryDist = Math.max(0, primaryDist);
       
-      // Secondary axis: horizontal offset
-      secondaryDist = Math.abs(candidateRect.centerX - originRect.centerX);
+      // Secondary axis: horizontal gap between the rects (0 when they overlap),
+      // plus a small center offset to break ties
+      secondaryDist = perpendicularGap(originRect.left, originRect.right, candidateRect.left, candidateRect.right) +
+                      0.2 * Math.abs(candidateRect.centerX - originRect.centerX);
       
       // Overlap bonus: perpendicular axis overlap
       if (config.overlapBonus) {
@@ -590,7 +687,9 @@
                 (secondaryDist * config.secondaryWeight) -
                 overlapBonus - alignmentBonus;
     
-    return Math.max(0, score);
+    // No clamping to 0: clamping made several close candidates tie at 0 and
+    // the first one in page order won, even when it was further away.
+    return score;
   }
 
   // ========================================================================
@@ -615,6 +714,23 @@
     
     if (config.fallback === 'wrap') {
       return findWrapCandidate(origin, allCandidates, direction);
+    }
+    
+    if (config.fallback === 'halfplane') {
+      // Nothing inside the cone: take the best candidate anywhere in the
+      // requested direction instead of giving up (or jumping backwards like
+      // 'nearest' can).
+      var halfPlane = filterByDirectionGeometric(origin, allCandidates, direction);
+      var best = null;
+      var bestScore = Infinity;
+      for (var i = 0; i < halfPlane.length; i++) {
+        var score = scoreDirectional(origin, halfPlane[i], direction);
+        if (score < bestScore) {
+          bestScore = score;
+          best = halfPlane[i];
+        }
+      }
+      return best;
     }
     
     return null;
@@ -772,6 +888,9 @@
     var filtered;
     if (config.mode === 'geometric') {
       filtered = filterByDirectionGeometric(origin, candidates, direction);
+    } else if (config.coneAngle >= 90) {
+      // "Smart" TV mode (coneAngle 90 = whole half-plane): see filterTiered
+      filtered = filterTiered(origin, candidates, direction);
     } else {
       filtered = filterByDirectionCone(origin, candidates, direction);
     }

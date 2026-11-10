@@ -144,7 +144,8 @@ const VERSION = '__VERSION__';
 /**
  * Base URL of the TizenPortal GitHub Pages deployment
  */
-var PORTAL_BASE_URL = 'https://axelnanol.github.io/tizenportal/dist';
+// Fork BLOBRO: the portal page is served from this fork's GitHub Pages
+var PORTAL_BASE_URL = 'https://blobro.github.io/tizenportal/dist';
 
 /**
  * TizenPortal's own favicon URL — used as a fallback icon for cards

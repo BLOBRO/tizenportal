@@ -49,8 +49,8 @@ export function getEffectiveMode(options) {
     return options.bundleMode;
   }
   
-  // Priority 4: Global default (defaults to 'geometric' if not set)
-  return options.globalMode || 'geometric';
+  // Priority 4: Global default (defaults to 'directional' if not set)
+  return options.globalMode || 'directional';
 }
 
 /**
@@ -115,12 +115,15 @@ function configureDirectionalMode(options) {
   try {
     var config = {
       mode: 'directional',
-      coneAngle: 30,
+      // 90 = whole half-plane with same-row priority for Left/Right
+      // (see filterTiered in spatial-navigation.js). The old 30 degree cone
+      // skipped links that were slightly offset on real websites.
+      coneAngle: 90,
       primaryWeight: 1,
       secondaryWeight: 0.5,
       overlapBonus: true,
       rowColumnBias: true,
-      fallback: 'nearest',
+      fallback: 'halfplane',
     };
     
     // Allow override of default settings
@@ -262,8 +265,8 @@ export function applyNavigationMode(card, bundle) {
  * Initialize navigation with global defaults (for portal page)
  */
 export function initializeGlobalNavigation() {
-  // Default to 'geometric' mode, overridden by global preferences if set
-  var globalMode = 'geometric';
+  // Default to 'directional' mode, overridden by global preferences if set
+  var globalMode = 'directional';
   
   if (window.TizenPortal && window.TizenPortal.config) {
     var features = window.TizenPortal.config.get('tp_features');

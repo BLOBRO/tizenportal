@@ -53,10 +53,12 @@ var DEFAULT_CONFIG = {
     navigationFix: true,
     
     // Navigation mode: which navigation system to use
-    // 'geometric' - Use new library in geometric mode (strict axis-aligned) - DEFAULT
-    // 'directional' - Use new library in directional mode (cone-based, forgiving)
+    // 'geometric' - Use new library in geometric mode (strict axis-aligned)
+    // 'directional' - Use new library in directional mode (cone-based, forgiving) - DEFAULT
     // 'polyfill' - Use legacy spatial-navigation-polyfill.js (backwards compatibility/testing ONLY)
-    navigationMode: 'geometric',
+    navigationMode: 'directional',
+    // One-time migration marker: moves existing users from 'geometric' to 'directional'
+    navigationModeMigrated: true,
   },
 
   // Global user scripts
@@ -105,6 +107,22 @@ function loadConfig() {
         }
       }
       
+      // One-time migration: the old default 'geometric' mode skips links and
+      // buttons that are not perfectly aligned on real websites. Move existing
+      // users to the more forgiving 'directional' mode once; after that the
+      // user's own choice is kept.
+      if (configCache.tp_features && !configCache.tp_features.navigationModeMigrated) {
+        if (!configCache.tp_features.navigationMode || configCache.tp_features.navigationMode === 'geometric') {
+          configCache.tp_features.navigationMode = 'directional';
+        }
+        configCache.tp_features.navigationModeMigrated = true;
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(configCache));
+        } catch (migrateErr) {
+          // Non-fatal: migration will simply run again next time
+        }
+      }
+
       // Deep merge for tp_features to ensure new nested keys appear for existing users
       if (configCache.tp_features && DEFAULT_CONFIG.tp_features) {
         for (var featureKey in DEFAULT_CONFIG.tp_features) {

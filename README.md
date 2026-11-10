@@ -1,5 +1,10 @@
 # 📺 TizenPortal
 
+> **Fork de [axelnanol/tizenportal](https://github.com/axelnanol/tizenportal)** (licence MIT, tout le mérite du projet revient à Axel Nanol).
+> Changements de ce fork : navigation « Smart » par défaut et plus tolérante (elle ne saute plus les liens légèrement décalés), titres du menu Préférences ignorés par les flèches, portail servi depuis `blobro.github.io/tizenportal`.
+> Dans TizenBrew : *Ajouter un module GitHub* → `BLOBRO/tizenportal`.
+
+
 ![Tizen](https://img.shields.io/badge/Tizen-3.0%2B-blueviolet) ![License](https://img.shields.io/badge/license-MIT-green)
 
 **TizenPortal** is a browser shell for Samsung Smart TVs running Tizen OS. It provides a launcher for managing any websites and injects site-specific fixes for TV compatibility (self-hosted apps like **Audiobookshelf** are a great fit, but not required).
