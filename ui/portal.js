@@ -44,9 +44,38 @@ export function initPortal() {
   applyPortalPreferences();
 
   setupHeaderLogoShortcut();
+  startClock();
 
   renderCards();
   focusCard(0);
+}
+
+/**
+ * Header clock (shown by the premium theme)
+ */
+var CLOCK_DAYS = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
+var CLOCK_MONTHS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet',
+  'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+var clockTimer = null;
+
+function pad2(n) {
+  return n < 10 ? '0' + n : '' + n;
+}
+
+function updateClock() {
+  var timeEl = document.getElementById('tp-clock-time');
+  var dateEl = document.getElementById('tp-clock-date');
+  if (!timeEl || !dateEl) return;
+  var now = new Date();
+  timeEl.textContent = pad2(now.getHours()) + ':' + pad2(now.getMinutes());
+  var day = CLOCK_DAYS[now.getDay()];
+  dateEl.textContent = day.charAt(0).toUpperCase() + day.substring(1) + ' ' + now.getDate() + ' ' + CLOCK_MONTHS[now.getMonth()];
+}
+
+function startClock() {
+  updateClock();
+  if (clockTimer) clearInterval(clockTimer);
+  clockTimer = setInterval(updateClock, 15000);
 }
 
 function setupHeaderLogoShortcut() {
@@ -88,6 +117,12 @@ function renderCards() {
   // Add the "+" card
   var addCardEl = createAddCardElement(cards.length);
   gridElement.appendChild(addCardEl);
+
+  var countEl = document.getElementById('tp-grid-count');
+  if (countEl) {
+    countEl.textContent = cards.length === 0 ? 'aucun site pour l\'instant'
+      : (cards.length === 1 ? '1 site' : cards.length + ' sites');
+  }
 }
 
 /**
@@ -135,7 +170,7 @@ function createCardElement(card, index) {
   // Name
   var nameEl = document.createElement('div');
   nameEl.className = 'tp-card-name';
-  nameEl.textContent = card.name || 'Untitled';
+  nameEl.textContent = card.name || 'Sans titre';
   el.appendChild(nameEl);
 
   // Bundle subtitle (optional)
@@ -215,7 +250,7 @@ function createAddCardElement(index) {
   // Name
   var nameEl = document.createElement('div');
   nameEl.className = 'tp-card-name';
-  nameEl.textContent = 'Add Site';
+  nameEl.textContent = 'Ajouter un site';
   el.appendChild(nameEl);
 
   // Click handler

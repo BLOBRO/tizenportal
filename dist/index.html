@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src * data:; connect-src *; frame-src *; object-src 'none'; base-uri 'self';">
@@ -8,12 +8,22 @@
   <title>TizenPortal</title>
   <script>
     (function() {
+      // Fork BLOBRO: premium theme (default) background, applied before first paint
+      var premiumBg = 'radial-gradient(1400px 700px at 50% -10%, rgba(232, 182, 90, 0.14) 0%, rgba(232, 182, 90, 0) 60%), ' +
+        'radial-gradient(1100px 800px at 100% 100%, rgba(60, 90, 160, 0.16) 0%, rgba(60, 90, 160, 0) 60%), ' +
+        'linear-gradient(180deg, #0c0e13 0%, #07080b 100%)';
+      function applyPremium() {
+        var ps = document.createElement('style');
+        ps.type = 'text/css';
+        ps.textContent = 'html, body { background: #07080b; } #tp-shell { background: ' + premiumBg + '; }';
+        document.head.appendChild(ps);
+      }
       try {
         var raw = localStorage.getItem('tp-configuration');
-        if (!raw) return;
+        if (!raw) { applyPremium(); return; }
         var cfg = JSON.parse(raw);
         var portal = cfg && cfg.tp_portal;
-        if (!portal) return;
+        if (!portal || !portal.theme || portal.theme === 'premium') { applyPremium(); return; }
 
         var theme = portal.theme || 'dark';
         if (theme === 'auto') {
@@ -2054,6 +2064,426 @@
       outline-offset: 4px;
       background: rgba(0, 168, 255, 0.05) !important;
     }
+
+    /* ========================================================================
+       PREMIUM THEME (fork BLOBRO) - streaming-style look for the TV
+       Chrome 47+ safe: no CSS variables, no flex gap, no backdrop-filter.
+       ======================================================================== */
+    #tp-shell[data-theme="premium"] {
+      font-family: 'SamsungOne', 'TizenSans', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      color: #f2f2f2;
+    }
+
+    #tp-shell[data-theme="premium"] #tp-portal {
+      padding: 56px 96px 140px 96px;
+    }
+
+    /* Header: logo + title on the left, clock on the right */
+    #tp-shell[data-theme="premium"] #tp-header {
+      margin-bottom: 56px;
+    }
+
+    #tp-shell[data-theme="premium"] #tp-header-logo {
+      width: 56px;
+      height: 56px;
+      margin-right: 20px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 2px solid rgba(255, 255, 255, 0.08);
+      filter: none;
+      padding: 6px;
+    }
+
+    #tp-shell[data-theme="premium"] #tp-header-logo:focus {
+      border-color: #ffffff;
+      box-shadow: 0 0 0 4px rgba(232, 182, 90, 0.55);
+    }
+
+    #tp-shell[data-theme="premium"] #tp-header h1 {
+      font-size: 40px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: #ffffff;
+      text-shadow: none;
+    }
+
+    #tp-shell[data-theme="premium"] #tp-header .version {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.35);
+      margin-left: 16px;
+      padding: 4px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+    }
+
+    #tp-clock {
+      display: none;
+    }
+
+    #tp-shell[data-theme="premium"] #tp-clock {
+      display: block;
+      margin-left: auto;
+      text-align: right;
+    }
+
+    #tp-shell[data-theme="premium"] #tp-clock-time {
+      display: block;
+      font-size: 44px;
+      font-weight: 300;
+      color: #ffffff;
+      line-height: 1;
+    }
+
+    #tp-shell[data-theme="premium"] #tp-clock-date {
+      display: block;
+      margin-top: 8px;
+      font-size: 18px;
+      color: rgba(255, 255, 255, 0.55);
+    }
+
+    #tp-grid-title {
+      display: none;
+    }
+
+    #tp-shell[data-theme="premium"] #tp-grid-title {
+      display: block;
+      font-size: 26px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.92);
+      margin-bottom: 28px;
+    }
+
+    #tp-shell[data-theme="premium"] #tp-grid-title span {
+      margin-left: 14px;
+      font-size: 18px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    /* Cards: 16:9 tiles that grow on focus */
+    #tp-shell[data-theme="premium"] #tp-grid {
+      margin: -16px;
+      overflow: visible;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-card {
+      position: relative;
+      width: 320px;
+      height: 196px;
+      margin: 16px;
+      background: linear-gradient(160deg, #1d2230 0%, #12151d 100%);
+      border: 3px solid transparent;
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+      transition: transform 0.18s ease-out, box-shadow 0.18s ease-out, border-color 0.18s ease-out;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+    }
+
+    #tp-shell[data-theme="premium"] .tp-card:focus {
+      border-color: #ffffff;
+      -webkit-transform: scale(1.08);
+      transform: scale(1.08);
+      box-shadow: 0 0 0 6px rgba(232, 182, 90, 0.35), 0 24px 50px rgba(0, 0, 0, 0.7);
+      z-index: 2;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-card-icon {
+      width: 88px;
+      height: 88px;
+      margin-bottom: 18px;
+      border-radius: 22px;
+      background: linear-gradient(160deg, #2c3344 0%, #1b202c 100%);
+      border: none;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+      font-size: 40px;
+      font-weight: 600;
+      color: #ffffff;
+      overflow: hidden;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-card-icon img {
+      border-radius: 22px !important;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-card-name {
+      font-size: 21px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.8);
+      max-width: 280px;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-card:focus .tp-card-name {
+      color: #ffffff;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-card-subtitle {
+      font-size: 14px;
+      color: rgba(232, 182, 90, 0.85);
+      max-width: 280px;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-card-add {
+      background: rgba(255, 255, 255, 0.03);
+      border: 3px dashed rgba(255, 255, 255, 0.16);
+      box-shadow: none;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-card-add:focus {
+      background: rgba(255, 255, 255, 0.07);
+      border: 3px solid #ffffff;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-card-add .tp-card-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 36px;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: none;
+      font-size: 44px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.75);
+      line-height: 72px;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-card-add:focus .tp-card-icon {
+      background: #e8b65a;
+      color: #15120b;
+    }
+
+    /* Color button hints: one discreet bar at the bottom */
+    #tp-shell[data-theme="premium"] #tp-hints {
+      left: 96px;
+      bottom: 36px;
+      padding: 14px 26px 14px 26px;
+      background: rgba(10, 12, 18, 0.82);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 40px;
+      font-size: 17px;
+      color: rgba(255, 255, 255, 0.85);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    #tp-shell[data-theme="premium"] .tp-hint {
+      margin-right: 34px;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-hint:last-child {
+      margin-right: 0;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-hint-key {
+      width: 20px;
+      height: 20px;
+      border-radius: 10px;
+      margin-right: 12px;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-hint-sub {
+      font-size: 15px;
+      color: rgba(255, 255, 255, 0.45);
+      opacity: 1;
+      margin-top: 3px;
+    }
+
+    /* While a menu is open, the hints would cover its buttons */
+    #tp-shell[data-theme="premium"].tp-menu-open #tp-hints {
+      display: none !important;
+    }
+
+    /* Toast and loading */
+    #tp-shell[data-theme="premium"] #tp-toast {
+      bottom: 130px;
+      background: rgba(20, 23, 31, 0.96);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 30px;
+      padding: 16px 34px;
+      font-size: 20px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    #tp-shell[data-theme="premium"] .tp-spinner {
+      border-color: rgba(255, 255, 255, 0.12);
+      border-top-color: #e8b65a;
+    }
+
+    /* Preferences and site editor panels */
+    #tp-shell[data-theme="premium"] .tp-prefs-backdrop,
+    #tp-shell[data-theme="premium"] .tp-editor-backdrop {
+      background: rgba(4, 5, 8, 0.86);
+    }
+
+    #tp-shell[data-theme="premium"] .tp-prefs-panel,
+    #tp-shell[data-theme="premium"] .tp-editor-panel {
+      top: 60px;
+      bottom: 60px;
+      left: 180px;
+      right: 180px;
+      background: linear-gradient(180deg, #171a22 0%, #101218 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+    }
+
+    #tp-shell[data-theme="premium"] .tp-prefs-header,
+    #tp-shell[data-theme="premium"] .tp-editor-header {
+      padding: 30px 44px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    #tp-shell[data-theme="premium"] .tp-prefs-header h2,
+    #tp-shell[data-theme="premium"] .tp-editor-header h2 {
+      font-size: 32px;
+      font-weight: 600;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-prefs-hint,
+    #tp-shell[data-theme="premium"] .tp-editor-hint {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    #tp-shell[data-theme="premium"] .tp-prefs-body {
+      padding: 24px 44px;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-prefs-row,
+    #tp-shell[data-theme="premium"] .tp-field-row {
+      position: relative;
+      padding: 18px 26px;
+      margin-bottom: 10px;
+      background: rgba(255, 255, 255, 0.035);
+      border: 2px solid transparent;
+      border-radius: 14px;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-prefs-row:focus,
+    #tp-shell[data-theme="premium"] .tp-field-row:focus {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #ffffff;
+      box-shadow: none;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-prefs-label {
+      width: 380px;
+      font-size: 21px;
+      color: rgba(255, 255, 255, 0.88);
+    }
+
+    #tp-shell[data-theme="premium"] .tp-prefs-value {
+      font-size: 20px;
+      color: #e8b65a;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-field-label {
+      width: 360px;
+      font-size: 21px;
+      color: rgba(255, 255, 255, 0.88);
+    }
+
+    #tp-shell[data-theme="premium"] .tp-field-value {
+      font-size: 19px;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-section-indicator {
+      color: #e8b65a;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-editor-preview-card {
+      background: linear-gradient(160deg, #1d2230 0%, #12151d 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-preview-icon {
+      border-radius: 22px;
+      overflow: hidden;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-prefs-row:focus .tp-prefs-value {
+      color: #ffd88f;
+    }
+
+    /* Section rows (Réglages généraux, Accueil, Sites...) */
+    #tp-shell[data-theme="premium"] .tp-prefs-section-row {
+      margin-top: 14px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    #tp-shell[data-theme="premium"] .tp-prefs-section-row .tp-prefs-label {
+      font-size: 23px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-prefs-section-row .tp-prefs-value {
+      overflow: hidden;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-prefs-section-summary {
+      display: block;
+      max-width: 760px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.4);
+      margin-right: 16px;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-prefs-section-indicator {
+      color: #e8b65a;
+      font-size: 18px;
+    }
+
+    /* Category titles inside a section (only labels) */
+    #tp-shell[data-theme="premium"] .tp-prefs-category,
+    #tp-shell[data-theme="premium"] .tp-prefs-userscript-category {
+      background: transparent;
+      border: none;
+      padding: 20px 26px 6px 26px;
+      margin-bottom: 4px;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-prefs-category .tp-prefs-label,
+    #tp-shell[data-theme="premium"] .tp-prefs-userscript-category .tp-prefs-label {
+      font-size: 15px !important;
+      font-weight: 600 !important;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(232, 182, 90, 0.8) !important;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-prefs-footer,
+    #tp-shell[data-theme="premium"] .tp-editor-footer {
+      padding: 22px 44px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    #tp-shell[data-theme="premium"] .tp-prefs-btn,
+    #tp-shell[data-theme="premium"] .tp-editor-btn {
+      padding: 14px 36px;
+      font-size: 19px;
+      font-weight: 600;
+      border: 2px solid transparent;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+    }
+
+    #tp-shell[data-theme="premium"] .tp-prefs-btn:focus,
+    #tp-shell[data-theme="premium"] .tp-editor-btn:focus {
+      background: #ffffff;
+      color: #111111;
+      border-color: #ffffff;
+      box-shadow: 0 0 0 4px rgba(232, 182, 90, 0.45);
+    }
+
+    #tp-shell[data-theme="premium"] .tp-editor-btn-save {
+      background: #e8b65a;
+      color: #15120b;
+    }
   </style>
 </head>
 <body>
@@ -2061,12 +2491,17 @@
     <!-- Portal launcher -->
     <div id="tp-portal">
       <div id="tp-header">
-        <button id="tp-header-logo" type="button" aria-label="Open Preferences">
+        <button id="tp-header-logo" type="button" aria-label="Ouvrir les préférences">
           <img src="assets/logo.svg" alt="" aria-hidden="true">
         </button>
         <h1>TizenPortal</h1>
         <span class="version" id="tp-version">v...</span>
+        <div id="tp-clock" aria-hidden="true">
+          <span id="tp-clock-time"></span>
+          <span id="tp-clock-date"></span>
+        </div>
       </div>
+      <div id="tp-grid-title">Mes sites<span id="tp-grid-count"></span></div>
       <div id="tp-grid">
         <!-- Cards rendered by JavaScript -->
       </div>
@@ -2075,7 +2510,7 @@
     <!-- Loading overlay -->
     <div id="tp-loading">
       <div class="tp-spinner"></div>
-      <div id="tp-loading-text">Loading...</div>
+      <div id="tp-loading-text">Chargement...</div>
     </div>
     
     <!-- Toast notification -->
@@ -2096,29 +2531,29 @@
       <div class="tp-hint">
         <div class="tp-hint-key red"></div>
         <div class="tp-hint-text">
-          <span>Address</span>
-          <span class="tp-hint-sub">Hold: Reload</span>
+          <span>Adresse</span>
+          <span class="tp-hint-sub">Maintenir : recharger</span>
         </div>
       </div>
       <div class="tp-hint">
         <div class="tp-hint-key green"></div>
         <div class="tp-hint-text">
-          <span>Mouse</span>
-          <span class="tp-hint-sub">Hold: Edit Card</span>
+          <span>Souris</span>
+          <span class="tp-hint-sub">Maintenir : modifier</span>
         </div>
       </div>
       <div class="tp-hint">
         <div class="tp-hint-key yellow"></div>
         <div class="tp-hint-text">
-          <span id="tp-hint-yellow-text">Preferences</span>
-          <span class="tp-hint-sub">Hold: Add Site</span>
+          <span id="tp-hint-yellow-text">Préférences</span>
+          <span class="tp-hint-sub">Maintenir : ajouter un site</span>
         </div>
       </div>
       <div class="tp-hint">
         <div class="tp-hint-key blue"></div>
         <div class="tp-hint-text">
           <span>Console</span>
-          <span class="tp-hint-sub">Hold: Safe Mode</span>
+          <span class="tp-hint-sub">Maintenir : mode sans échec</span>
         </div>
       </div>
     </div>

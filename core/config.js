@@ -22,7 +22,7 @@ var DEFAULT_CONFIG = {
   
   // Portal preferences
   tp_portal: {
-    theme: 'dark',
+    theme: 'premium',
     customColor1: '#0d1117',
     customColor2: '#161b22',
     backgroundImage: '',

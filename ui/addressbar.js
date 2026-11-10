@@ -449,7 +449,7 @@ function handleHome() {
   
   if (!homeUrl) {
     if (window.TizenPortal) {
-      window.TizenPortal.showToast('No home URL');
+      window.TizenPortal.showToast('Pas d\'adresse d\'accueil');
     }
     return;
   }
@@ -458,7 +458,7 @@ function handleHome() {
   window.location.href = homeUrl;
   
   if (window.TizenPortal) {
-    window.TizenPortal.showToast('Going to site home');
+    window.TizenPortal.showToast('Retour à l\'accueil du site');
   }
   
   hideAddressBar();
@@ -475,7 +475,7 @@ function handleBack() {
   window.history.back();
   
   if (window.TizenPortal) {
-    window.TizenPortal.showToast('Back');
+    window.TizenPortal.showToast('Précédent');
   }
 }
 
@@ -489,7 +489,7 @@ function handleForward() {
   window.history.forward();
   
   if (window.TizenPortal) {
-    window.TizenPortal.showToast('Forward');
+    window.TizenPortal.showToast('Suivant');
   }
 }
 
@@ -500,7 +500,7 @@ function handleReload() {
   console.log('TizenPortal: Address bar - Reload');
   
   if (window.TizenPortal) {
-    window.TizenPortal.showToast('Reloading...');
+    window.TizenPortal.showToast('Rechargement...');
   }
   
   // Reload current window
@@ -520,7 +520,7 @@ function handleGo() {
   url = sanitizeUrl(url);
   if (!url) {
     if (window.TizenPortal) {
-      window.TizenPortal.showToast('Invalid URL — only http/https allowed');
+      window.TizenPortal.showToast('Adresse invalide : seules http et https sont acceptées');
     }
     return;
   }
@@ -528,7 +528,7 @@ function handleGo() {
   console.log('TizenPortal: Address bar - Go to:', url);
   
   if (window.TizenPortal) {
-    window.TizenPortal.showToast('Loading...');
+    window.TizenPortal.showToast('Chargement...');
   }
 
   hideAddressBar();

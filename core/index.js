@@ -877,6 +877,10 @@ async function initPortalPage() {
     featureLoader.applyFeatures(document, {
       focusStyling: false,
       focusOutlineMode: 'off',
+      // Fork BLOBRO: Text Scale forces every element of the portal to the same
+      // font size (1rem !important), which flattened the home screen. It is
+      // meant for websites, so it stays active there but not on the portal.
+      textScale: 'off',
     });
   } catch (e) {
     warn('Failed to apply features to portal: ' + e.message);
@@ -2155,10 +2159,10 @@ function createSiteHints() {
   var hints = document.createElement('div');
   hints.className = 'tp-site-hints';
   hints.innerHTML = [
-    '<div class="tp-site-hint"><div class="tp-site-hint-key red"></div><div class="tp-site-hint-text"><span>Address</span><span class="tp-site-hint-sub">Hold: Reload</span></div></div>',
-    '<div class="tp-site-hint"><div class="tp-site-hint-key green"></div><div class="tp-site-hint-text"><span>Mouse</span><span class="tp-site-hint-sub">Hold: Focus</span></div></div>',
-    '<div class="tp-site-hint"><div class="tp-site-hint-key yellow"></div><div class="tp-site-hint-text"><span>Portal</span><span class="tp-site-hint-sub">Hold: Add Site</span></div></div>',
-    '<div class="tp-site-hint"><div class="tp-site-hint-key blue"></div><div class="tp-site-hint-text"><span>Console</span><span class="tp-site-hint-sub">Hold: Safe Mode</span></div></div>',
+    '<div class="tp-site-hint"><div class="tp-site-hint-key red"></div><div class="tp-site-hint-text"><span>Adresse</span><span class="tp-site-hint-sub">Maintenir : recharger</span></div></div>',
+    '<div class="tp-site-hint"><div class="tp-site-hint-key green"></div><div class="tp-site-hint-text"><span>Souris</span><span class="tp-site-hint-sub">Maintenir : cadre de sélection</span></div></div>',
+    '<div class="tp-site-hint"><div class="tp-site-hint-key yellow"></div><div class="tp-site-hint-text"><span>Accueil</span><span class="tp-site-hint-sub">Maintenir : ajouter ce site</span></div></div>',
+    '<div class="tp-site-hint"><div class="tp-site-hint-key blue"></div><div class="tp-site-hint-text"><span>Console</span><span class="tp-site-hint-sub">Maintenir : mode sans échec</span></div></div>',
   ].join('');
   var portalConfig = configGet('tp_portal') || {};
   var hintPosition = resolveHintsPosition(portalConfig);
@@ -2337,10 +2341,10 @@ function addCurrentSiteAndReturn() {
     };
     encoded = btoa(unescape(encodeURIComponent(JSON.stringify(cardData))));
     log('Prepared card for portal: ' + pageName + ' (' + currentUrl + ') with bundle: ' + (state.currentBundle || 'default'));
-    showToast('Adding site: ' + pageName, 2000);
+    showToast('Ajout du site : ' + pageName, 2000);
   } catch (err) {
     warn('Failed to prepare current site: ' + err.message);
-    showToast('Failed to add site', 2000);
+    showToast('Impossible d\'ajouter le site', 2000);
   }
 
   // Navigate to portal, passing card data in hash so portal can save it
@@ -2452,14 +2456,22 @@ function updateYellowHint() {
 
   if (!hintText && !hintSub) return;
 
-  if (isSiteEditorOpen() || isPreferencesOpen()) {
-    if (hintText) hintText.textContent = 'Disabled';
-    if (hintSub) hintSub.textContent = 'Hold: Disabled';
+  var menuOpen = isSiteEditorOpen() || isPreferencesOpen();
+  var shellEl = document.getElementById('tp-shell');
+  if (shellEl && shellEl.classList) {
+    // Premium theme hides the color hints while a menu is open (they covered its buttons)
+    if (menuOpen) shellEl.classList.add('tp-menu-open');
+    else shellEl.classList.remove('tp-menu-open');
+  }
+
+  if (menuOpen) {
+    if (hintText) hintText.textContent = 'Indisponible';
+    if (hintSub) hintSub.textContent = 'Maintenir : indisponible';
     return;
   }
 
-  if (hintText) hintText.textContent = 'Preferences';
-  if (hintSub) hintSub.textContent = 'Hold: Add Site';
+  if (hintText) hintText.textContent = 'Préférences';
+  if (hintSub) hintSub.textContent = 'Maintenir : ajouter un site';
 }
 
 /**
@@ -2478,11 +2490,11 @@ function updateGreenHint() {
   if (!hintSub) return;
 
   if (isSiteEditorOpen() || isPreferencesOpen()) {
-    hintSub.textContent = 'Hold: Disabled';
+    hintSub.textContent = 'Maintenir : indisponible';
     return;
   }
 
-  hintSub.textContent = 'Hold: Edit Card';
+  hintSub.textContent = 'Maintenir : modifier';
 }
 
 /**
@@ -2571,7 +2583,7 @@ function loadSite(card) {
 
   log('Navigating to site: ' + card.url);
   var bundleName = card.featureBundle || 'default';
-  showToast('Loading ' + (card.name || card.url) + ' (bundle: ' + bundleName + ')...');
+  showToast('Ouverture de ' + (card.name || card.url) + '...');
   tpHud('Launch: ' + (card.name || card.url) + ' | bundle: ' + bundleName);
 
   // Store current card in state

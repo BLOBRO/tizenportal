@@ -112,7 +112,7 @@ export function showAddCardModal() {
     refreshPortal();
     
     if (window.TizenPortal) {
-      window.TizenPortal.showToast('Added: ' + name);
+      window.TizenPortal.showToast('Ajouté : ' + name);
     }
     
     return true; // Close modal
@@ -157,18 +157,18 @@ export function showEditCardModal(card) {
     refreshPortal();
     
     if (window.TizenPortal) {
-      window.TizenPortal.showToast('Updated: ' + name);
+      window.TizenPortal.showToast('Modifié : ' + name);
     }
     
     return true; // Close modal
   }, function() {
     // Delete button callback
-    if (confirm('Delete ' + card.name + '?')) {
+    if (confirm('Supprimer ' + card.name + ' ?')) {
       deleteCard(card.id);
       refreshPortal();
       
       if (window.TizenPortal) {
-        window.TizenPortal.showToast('Deleted: ' + card.name);
+        window.TizenPortal.showToast('Supprimé : ' + card.name);
       }
       
       closeModal();
@@ -240,10 +240,10 @@ function createCardForm(card) {
   // Buttons
   html += '<div class="tp-form-buttons">';
   if (isEdit) {
-    html += '<button type="button" class="tp-btn tp-btn-danger" tabindex="0" data-action="delete">Delete</button>';
+    html += '<button type="button" class="tp-btn tp-btn-danger" tabindex="0" data-action="delete">Supprimer</button>';
   }
-  html += '<button type="button" class="tp-btn tp-btn-secondary" tabindex="0" data-action="cancel">Cancel</button>';
-  html += '<button type="submit" class="tp-btn tp-btn-primary" tabindex="0">Save</button>';
+  html += '<button type="button" class="tp-btn tp-btn-secondary" tabindex="0" data-action="cancel">Annuler</button>';
+  html += '<button type="submit" class="tp-btn tp-btn-primary" tabindex="0">Enregistrer</button>';
   html += '</div>';
   
   html += '</form>';

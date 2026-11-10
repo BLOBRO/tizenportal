@@ -483,7 +483,13 @@ function handleKeyDown(event) {
   // Directional mode arrow fallback:
   // when no candidate is focusable in the requested direction, scroll one step
   // and focus a newly visible edge element to avoid dead-end navigation.
-  if (isArrowKey && getSpatialNavigationMode() === 'directional') {
+  // Menus (Preferences, site editor, diagnostics, address bar, dialogs) move
+  // the focus themselves. Running directional navigation here as well sent
+  // the focus to the portal cards hidden behind the menu.
+  var overlayOpen = isPreferencesOpen() || isSiteEditorOpen() ||
+    isDiagnosticsPanelVisible() || isAddressBarVisible() ||
+    !!document.querySelector('.tp-modal-overlay');
+  if (isArrowKey && !overlayOpen && getSpatialNavigationMode() === 'directional') {
     var direction = null;
     if (keyCode === KEYS.LEFT) direction = 'left';
     else if (keyCode === KEYS.RIGHT) direction = 'right';
@@ -604,7 +610,7 @@ export function executeColorAction(action) {
     case 'reload':
       // Reload current page
       if (window.TizenPortal) {
-        window.TizenPortal.showToast('Reloading...');
+        window.TizenPortal.showToast('Rechargement...');
       }
       window.location.reload();
       break;
@@ -613,7 +619,7 @@ export function executeColorAction(action) {
       // Toggle pointer/mouse mode
       var pointerEnabled = togglePointer();
       if (window.TizenPortal) {
-        window.TizenPortal.showToast('Mouse mode: ' + (pointerEnabled ? 'ON' : 'OFF'));
+        window.TizenPortal.showToast('Mode souris : ' + (pointerEnabled ? 'activé' : 'désactivé'));
       }
       break;
 
@@ -632,7 +638,7 @@ export function executeColorAction(action) {
           window.TizenPortal._featureLoader.applyFeatures(document);
         }
         
-        window.TizenPortal.showToast('Focus highlight: ' + (!currentHighlight ? 'ON' : 'OFF'));
+        window.TizenPortal.showToast('Cadre de sélection : ' + (!currentHighlight ? 'activé' : 'désactivé'));
       }
       break;
 
@@ -648,7 +654,7 @@ export function executeColorAction(action) {
       var focusedCard = getFocusedCard();
       if (!focusedCard) {
         if (window.TizenPortal) {
-          window.TizenPortal.showToast('Focus a site card to edit');
+          window.TizenPortal.showToast('Sélectionne d\'abord la carte d\'un site');
         }
         break;
       }
@@ -717,7 +723,7 @@ export function executeColorAction(action) {
       // Enter safe mode
       configWrite('safeMode', true);
       if (window.TizenPortal) {
-        window.TizenPortal.showToast('Entering safe mode...');
+        window.TizenPortal.showToast('Passage en mode sans échec...');
       }
       setTimeout(function() {
         // On target site, return to portal in safe mode

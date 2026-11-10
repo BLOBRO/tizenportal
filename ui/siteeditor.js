@@ -95,10 +95,10 @@ function setEditorMode(mode, cardId) {
  * Prepend the "use global setting" sentinel to a shared option list.
  * Used by every cycle-type override control in the site editor.
  * @param {Array} options - Base option array from features/options.js
- * @returns {Array} New array with {value: null, label: 'Global (default)'} prepended
+ * @returns {Array} New array with {value: null, label: 'Général (par défaut)'} prepended
  */
 function withGlobalDefault(options) {
-  return [{ value: null, label: 'Global (default)' }].concat(options);
+  return [{ value: null, label: 'Général (par défaut)' }].concat(options);
 }
 
 var VIEWPORT_MODE_OPTIONS = withGlobalDefault(VIEWPORT_OPTIONS);
@@ -116,86 +116,86 @@ var UA_MODE_OPTIONS = withGlobalDefault(UA_MODE_BASE);
 var NAVIGATION_MODE_OPTIONS = withGlobalDefault(NAVIGATION_MODE_BASE);
 
 var FEATURE_TOGGLE_OPTIONS = [
-  { value: null, label: 'Global (default)' },
-  { value: true, label: 'On' },
-  { value: false, label: 'Off' },
+  { value: null, label: 'Général (par défaut)' },
+  { value: true, label: 'Activé' },
+  { value: false, label: 'Désactivé' },
 ];
 
 var FEATURE_CATEGORIES = [
-  { id: 'focus', label: '🎯 Focus & Navigation' },
-  { id: 'display', label: '🎨 Display & Layout' },
-  { id: 'input', label: '⌨️ Input Protection' },
-  { id: 'performance', label: '⚡ Performance' },
+  { id: 'focus', label: '🎯 Sélection et navigation' },
+  { id: 'display', label: '🎨 Affichage' },
+  { id: 'input', label: '⌨️ Protection de la saisie' },
+  { id: 'performance', label: '⚡ Performances' },
 ];
 
 var GLOBAL_OVERRIDE_CATEGORIES = [
-  { id: 'appearance', label: '🎨 Appearance' },
-  { id: 'navigation', label: '🧭 Navigation Style' },
+  { id: 'appearance', label: '🎨 Apparence' },
+  { id: 'navigation', label: '🧭 Style de navigation' },
 ];
 
 var GLOBAL_OVERRIDE_DEFS = [
   // Appearance category
-  { key: 'textScale', label: 'Text Scale', category: 'appearance', options: TEXT_SCALE_OPTIONS,
+  { key: 'textScale', label: 'Taille du texte', category: 'appearance', options: TEXT_SCALE_OPTIONS,
     description: 'Scale all text for improved TV legibility while maintaining relative sizing' },
   
   // Navigation Style category
-  { key: 'focusOutlineMode', label: 'Focus Outline', category: 'navigation', options: FOCUS_OUTLINE_OPTIONS,
+  { key: 'focusOutlineMode', label: 'Cadre de sélection', category: 'navigation', options: FOCUS_OUTLINE_OPTIONS,
     description: 'Visual style of focus indicator outline' },
-  { key: 'focusTransitionMode', label: 'Focus Transition Style', category: 'navigation', options: FOCUS_TRANSITION_MODE_OPTIONS,
+  { key: 'focusTransitionMode', label: 'Animation de sélection', category: 'navigation', options: FOCUS_TRANSITION_MODE_OPTIONS,
     description: 'Animation style when focus moves between elements' },
-  { key: 'focusTransitionSpeed', label: 'Focus Transition Speed', category: 'navigation', options: FOCUS_TRANSITION_SPEED_OPTIONS,
+  { key: 'focusTransitionSpeed', label: 'Vitesse d\'animation', category: 'navigation', options: FOCUS_TRANSITION_SPEED_OPTIONS,
     description: 'Animation speed for focus transitions' },
 ];
 
 var SITE_OVERRIDE_CATEGORIES = [
-  { id: 'behavior', label: '🧭 Behavior' },
+  { id: 'behavior', label: '🧭 Comportement' },
 ];
 
 var SITE_OVERRIDE_DEFS = [
   // Behavior category
-  { key: 'navigationMode', label: 'Navigation Mode', category: 'behavior', options: NAVIGATION_MODE_OPTIONS,
+  { key: 'navigationMode', label: 'Mode de navigation', category: 'behavior', options: NAVIGATION_MODE_OPTIONS,
     description: 'Method used for directional navigation with the remote control' },
-  { key: 'viewportMode', label: 'Viewport Lock Mode', category: 'behavior', options: VIEWPORT_MODE_OPTIONS,
+  { key: 'viewportMode', label: 'Largeur de page', category: 'behavior', options: VIEWPORT_MODE_OPTIONS,
     description: 'Control viewport scaling behavior for this site' },
-  { key: 'userAgent', label: 'User Agent Mode', category: 'behavior', options: UA_MODE_OPTIONS,
+  { key: 'userAgent', label: 'Identité du navigateur', category: 'behavior', options: UA_MODE_OPTIONS,
     description: 'Override user agent string for compatibility' },
 ];
 
 var FEATURE_OVERRIDE_DEFS = [
   // Focus & Navigation category
-  { key: 'tabindexInjection', label: 'Auto-focusable Elements', category: 'focus', 
+  { key: 'tabindexInjection', label: 'Rendre tout sélectionnable', category: 'focus', 
     description: 'Automatically inject tabindex on interactive elements for remote control navigation' },
-  { key: 'scrollIntoView', label: 'Scroll into View on Focus', category: 'focus',
+  { key: 'scrollIntoView', label: 'Défiler jusqu\'à la sélection', category: 'focus',
     description: 'Scroll container when focused element comes into viewport' },
-  { key: 'navigationFix', label: 'Navigation Fixes', category: 'focus',
+  { key: 'navigationFix', label: 'Corrections de navigation', category: 'focus',
     description: 'Apply site-specific navigation workarounds for better D-pad control' },
-  { key: 'focusTransitions', label: 'Focus Transition Animations', category: 'focus',
+  { key: 'focusTransitions', label: 'Animations de sélection', category: 'focus',
     description: 'Enable smooth animations when focus moves between elements (slide, scale, glow)' },
   
   // Display & Layout category (global features with per-site overrides)
-  { key: 'safeArea', label: 'TV Safe Area (5% inset)', category: 'display',
+  { key: 'safeArea', label: 'Marge de sécurité TV (5 %)', category: 'display',
     description: 'Override global safe area: Inset content 5% from edges to account for TV screen overscan' },
-  { key: 'cssReset', label: 'CSS Normalization', category: 'display',
+  { key: 'cssReset', label: 'Normalisation CSS', category: 'display',
     description: 'Override global CSS reset: Apply baseline CSS resets for consistent Tizen display' },
-  { key: 'hideScrollbars', label: 'Hide Scrollbars', category: 'display',
+  { key: 'hideScrollbars', label: 'Masquer les barres de défilement', category: 'display',
     description: 'Override global scrollbar hiding: Hide native scrollbars for cleaner TV interface' },
   
   // Input Protection category
-  { key: 'wrapTextInputs', label: 'Protect Text Inputs', category: 'input',
+  { key: 'wrapTextInputs', label: 'Protéger les champs de texte', category: 'input',
     description: 'Protect text input fields from accidental remote button presses during editing' },
   
   // Performance category (global features with per-site overrides)
-  { key: 'gpuHints', label: 'GPU Acceleration', category: 'performance',
+  { key: 'gpuHints', label: 'Accélération graphique', category: 'performance',
     description: 'Override global GPU hints: Apply GPU acceleration for animations on constrained hardware' },
 ];
 
 var SECTION_DEFS = [
-  { id: 'details', label: '📝 Details', defaultCollapsed: true },
-  { id: 'bundle', label: '📦 Bundle', defaultCollapsed: true },
-  { id: 'bundleOptions', label: '⚙️ Bundle Options', defaultCollapsed: true },
-  { id: 'globalOverrides', label: '⚙️ Global Feature Overrides (Session Only)', defaultCollapsed: true },
-  { id: 'siteOverrides', label: '🖥️ Per-Site Feature Overrides (Persistent)', defaultCollapsed: true },
-  { id: 'userscripts', label: '📜 User Scripts', defaultCollapsed: true },
+  { id: 'details', label: '📝 Informations', defaultCollapsed: true },
+  { id: 'bundle', label: '📦 Module', defaultCollapsed: true },
+  { id: 'bundleOptions', label: '⚙️ Options du module', defaultCollapsed: true },
+  { id: 'globalOverrides', label: '⚙️ Réglages temporaires', defaultCollapsed: true },
+  { id: 'siteOverrides', label: '🖥️ Réglages du site', defaultCollapsed: true },
+  { id: 'userscripts', label: '📜 Scripts', defaultCollapsed: true },
 ];
 
 var sectionCollapsed = {
@@ -207,22 +207,22 @@ var sectionCollapsed = {
 };
 
 var FIELDS = [
-  { name: '__section_details', label: '📝 Details', type: 'section', sectionId: 'details' },
-  { name: 'name', label: 'Site Name', type: 'text', placeholder: 'My Site', required: true, section: 'details' },
-  { name: 'url', label: 'Site URL', type: 'text', placeholder: 'https://example.com', required: true, section: 'details' },
-  { name: 'icon', label: 'Icon URL', type: 'text', placeholder: 'https://example.com/favicon.ico', required: false, section: 'details' },
-  { name: '__fetchIcon', label: 'Fetch Favicon', type: 'button', action: 'fetch-icon', section: 'details' },
-  { name: '__section_bundle', label: '📦 Bundle', type: 'section', sectionId: 'bundle' },
-  { name: 'featureBundle', label: 'Site-specific Bundle', type: 'bundle', required: false, section: 'bundle' },
-  { name: '__section_bundleOptions', label: '⚙️ Bundle Options', type: 'section', sectionId: 'bundleOptions' },
-  { name: '__bundleOptions', label: 'Bundle Options', type: 'bundleOptions', section: 'bundleOptions' },
-  { name: '__section_globalOverrides', label: '⚙️ Global Feature Overrides (Session Only)', type: 'section', sectionId: 'globalOverrides' },
-  { name: '__globalOverrides', label: 'Global Overrides', type: 'globalOverrides', section: 'globalOverrides' },
-  { name: '__section_siteOverrides', label: '🖥️ Per-Site Feature Overrides (Persistent)', type: 'section', sectionId: 'siteOverrides' },
-  { name: '__siteOverrides', label: 'Site Overrides', type: 'siteOverrides', section: 'siteOverrides' },
-  { name: '__features', label: 'Feature Toggles', type: 'featureOverrides', section: 'siteOverrides' },
-  { name: '__section_userscripts', label: '📜 User Scripts', type: 'section', sectionId: 'userscripts' },
-  { name: '__userscripts', label: 'User Scripts', type: 'userscripts', section: 'userscripts' },
+  { name: '__section_details', label: '📝 Informations', type: 'section', sectionId: 'details' },
+  { name: 'name', label: 'Nom du site', type: 'text', placeholder: 'My Site', required: true, section: 'details' },
+  { name: 'url', label: 'Adresse du site', type: 'text', placeholder: 'https://example.com', required: true, section: 'details' },
+  { name: 'icon', label: 'Adresse de l\'icône', type: 'text', placeholder: 'https://example.com/favicon.ico', required: false, section: 'details' },
+  { name: '__fetchIcon', label: 'Récupérer l\'icône', type: 'button', action: 'fetch-icon', section: 'details' },
+  { name: '__section_bundle', label: '📦 Module', type: 'section', sectionId: 'bundle' },
+  { name: 'featureBundle', label: 'Module du site', type: 'bundle', required: false, section: 'bundle' },
+  { name: '__section_bundleOptions', label: '⚙️ Options du module', type: 'section', sectionId: 'bundleOptions' },
+  { name: '__bundleOptions', label: 'Options du module', type: 'bundleOptions', section: 'bundleOptions' },
+  { name: '__section_globalOverrides', label: '⚙️ Réglages temporaires', type: 'section', sectionId: 'globalOverrides' },
+  { name: '__globalOverrides', label: 'Réglages généraux', type: 'globalOverrides', section: 'globalOverrides' },
+  { name: '__section_siteOverrides', label: '🖥️ Réglages du site', type: 'section', sectionId: 'siteOverrides' },
+  { name: '__siteOverrides', label: 'Réglages du site', type: 'siteOverrides', section: 'siteOverrides' },
+  { name: '__features', label: 'Fonctions', type: 'featureOverrides', section: 'siteOverrides' },
+  { name: '__section_userscripts', label: '📜 Scripts', type: 'section', sectionId: 'userscripts' },
+  { name: '__userscripts', label: 'Scripts', type: 'userscripts', section: 'userscripts' },
 ];
 
 /**
@@ -371,7 +371,7 @@ function createEditorHTML() {
     '<div class="tp-editor-panel">' +
       '<div class="tp-editor-header">' +
         '<h2 id="tp-editor-title">Add Site</h2>' +
-        '<div class="tp-editor-hint">Navigate with D-pad | Changes auto-save</div>' +
+        '<div class="tp-editor-hint">Flèches pour naviguer · Enregistré automatiquement</div>' +
       '</div>' +
       '<div class="tp-editor-body">' +
         '<div class="tp-editor-fields" id="tp-editor-fields"></div>' +
@@ -391,15 +391,15 @@ function createEditorHTML() {
       '<div class="tp-editor-footer">' +
         '<div class="tp-editor-footer-left">' +
           '<button type="button" class="tp-editor-btn tp-editor-btn-delete" id="tp-editor-delete" tabindex="0">' +
-            '<span class="tp-btn-icon">🗑</span> Delete' +
+            '<span class="tp-btn-icon">🗑</span> Supprimer' +
           '</button>' +
           '<button type="button" class="tp-editor-btn tp-editor-btn-purge" id="tp-editor-purge" tabindex="0">' +
-            '<span class="tp-btn-icon">🧹</span> Purge Data' +
+            '<span class="tp-btn-icon">🧹</span> Effacer les données' +
           '</button>' +
         '</div>' +
         '<div class="tp-editor-footer-right">' +
           '<button type="button" class="tp-editor-btn tp-editor-btn-cancel" id="tp-editor-cancel" tabindex="0">' +
-            'Close' +
+            'Fermer' +
           '</button>' +
         '</div>' +
       '</div>' +
@@ -643,7 +643,7 @@ function openEditor() {
   // Set title
   var title = editor.querySelector('#tp-editor-title');
   if (title) {
-    title.textContent = isEdit ? 'Edit Site' : 'Add Site';
+    title.textContent = isEdit ? 'Modifier le site' : 'Ajouter un site';
   }
 
   // Show/hide delete button
@@ -816,7 +816,7 @@ function autoSaveCard(reason) {
   if (mode === 'edit' && cardId) {
     console.log('TizenPortal: EDIT MODE - Updating card ID:', cardId);
     updateCard(cardId, payload);
-    showEditorToast('Saved');
+    showEditorToast('Enregistré');
   } else {
     console.log('TizenPortal: ADD MODE - Creating new card');
     var created = addCard(payload);
@@ -832,7 +832,7 @@ function autoSaveCard(reason) {
     
     var title = document.querySelector('#tp-editor-title');
     if (title) {
-      title.textContent = 'Edit Site';
+      title.textContent = 'Modifier le site';
     }
 
     showEditorToast('Added');
@@ -863,7 +863,7 @@ function deleteAndClose() {
   var deleteBtn = document.getElementById('tp-editor-delete');
   if (deleteBtn && deleteBtn.dataset.confirmDelete === 'true') {
     deleteCard(cardId);
-    showEditorToast('Deleted: ' + cardName);
+    showEditorToast('Supprimé : ' + cardName);
     closeSiteEditor();
     refreshPortal();
 
@@ -874,18 +874,18 @@ function deleteAndClose() {
     if (deleteBtn) {
       deleteBtn.dataset.confirmDelete = 'true';
       deleteBtn.querySelector('.tp-btn-icon').textContent = '⚠';
-      deleteBtn.childNodes[1].textContent = ' Press again to confirm';
+      deleteBtn.childNodes[1].textContent = ' Appuie encore pour confirmer';
       
       // Reset after 3 seconds
       setTimeout(function() {
         if (deleteBtn) {
           deleteBtn.dataset.confirmDelete = '';
           deleteBtn.querySelector('.tp-btn-icon').textContent = '🗑';
-          deleteBtn.childNodes[1].textContent = ' Delete';
+          deleteBtn.childNodes[1].textContent = ' Supprimer';
         }
       }, 3000);
     }
-    showEditorToast('Press Delete again to confirm');
+    showEditorToast('Appuie encore sur Supprimer pour confirmer');
   }
 }
 
@@ -895,7 +895,7 @@ function resetDeleteButtonState(deleteBtn) {
   var icon = deleteBtn.querySelector('.tp-btn-icon');
   if (icon) icon.textContent = '🗑';
   if (deleteBtn.childNodes[1]) {
-    deleteBtn.childNodes[1].textContent = ' Delete';
+    deleteBtn.childNodes[1].textContent = ' Supprimer';
   }
 }
 
@@ -905,7 +905,7 @@ function resetPurgeButtonState(purgeBtn) {
   var icon = purgeBtn.querySelector('.tp-btn-icon');
   if (icon) icon.textContent = '🧹';
   if (purgeBtn.childNodes[1]) {
-    purgeBtn.childNodes[1].textContent = ' Purge Data';
+    purgeBtn.childNodes[1].textContent = ' Effacer les données';
   }
 }
 
@@ -976,14 +976,14 @@ function purgeSiteData() {
     if (purgeBtn) {
       purgeBtn.dataset.confirmPurge = 'true';
       purgeBtn.querySelector('.tp-btn-icon').textContent = '⚠';
-      purgeBtn.childNodes[1].textContent = ' Press again to confirm';
+      purgeBtn.childNodes[1].textContent = ' Appuie encore pour confirmer';
 
       // Reset after 3 seconds
       setTimeout(function() {
         resetPurgeButtonState(purgeBtn);
       }, 3000);
     }
-    showEditorToast('Press Purge again to confirm');
+    showEditorToast('Appuie encore pour confirmer l\'effacement');
   }
 }
 
@@ -1093,16 +1093,16 @@ function getSectionSummary(sectionId) {
 
   if (sectionId === 'bundle') {
     var bundleName = state.card.featureBundle || null;
-    if (!bundleName) return 'Bundle: None';
+    if (!bundleName) return 'Module : aucun';
     var bundle = getBundle(bundleName);
     var manifest = bundle && bundle.manifest;
     var displayName = manifest && manifest.displayName ? manifest.displayName : bundleName;
-    return 'Bundle: ' + displayName;
+    return 'Module : ' + displayName;
   }
 
   if (sectionId === 'bundleOptions') {
     var bundleOptionSummary = getBundleOptionsSummary();
-    return bundleOptionSummary || 'None';
+    return bundleOptionSummary || 'Aucune';
   }
 
   if (sectionId === 'globalOverrides') {
@@ -1110,7 +1110,7 @@ function getSectionSummary(sectionId) {
     var focus = getOptionLabel(FOCUS_OUTLINE_OPTIONS, state.card.focusOutlineMode);
     var transition = getOptionLabel(FOCUS_TRANSITION_MODE_OPTIONS, state.card.focusTransitionMode);
     var transitionSpeed = getOptionLabel(FOCUS_TRANSITION_SPEED_OPTIONS, state.card.focusTransitionSpeed);
-    return 'Text: ' + textScale + ' • Focus: ' + focus + ' • Transition: ' + transition + ' • Speed: ' + transitionSpeed;
+    return 'Texte : ' + textScale + ' • Cadre : ' + focus + ' • Animation : ' + transition + ' • Vitesse : ' + transitionSpeed;
   }
 
   if (sectionId === 'siteOverrides') {
@@ -1118,7 +1118,7 @@ function getSectionSummary(sectionId) {
     var viewport = getOptionLabel(VIEWPORT_MODE_OPTIONS, state.card.viewportMode);
     var ua = getOptionLabel(UA_MODE_OPTIONS, state.card.userAgent);
     var featureSummary = getFeatureOverridesSummary();
-    return 'Nav: ' + navMode + ' • Viewport: ' + viewport + ' • UA: ' + ua + (featureSummary ? ' • ' + featureSummary : '');
+    return 'Navigation : ' + navMode + ' • Largeur : ' + viewport + ' • Identité : ' + ua + (featureSummary ? ' • ' + featureSummary : '');
   }
 
   if (sectionId === 'userscripts') {
@@ -1129,7 +1129,7 @@ function getSectionSummary(sectionId) {
     var name = state.card.name || 'Unnamed';
     var url = state.card.url || 'No URL';
     var icon = state.card.icon ? '✓' : '○';
-    return name + ' • ' + shortenUrl(url) + ' • Icon: ' + icon;
+    return name + ' • ' + shortenUrl(url) + ' • Icône : ' + icon;
   }
 
   return '';
@@ -1255,8 +1255,8 @@ function getUserscriptsSummary() {
     }
   }
 
-  if (!globalScripts.length) return 'None';
-  return enabledNames.length > 0 ? enabledNames.join(', ') : 'None enabled';
+  if (!globalScripts.length) return 'Aucun';
+  return enabledNames.length > 0 ? enabledNames.join(', ') : 'Aucun activé';
 }
 
 function getGlobalFeaturesConfig() {
@@ -1272,7 +1272,7 @@ function getNormalizedGlobalValue(globalFeatures, key) {
 }
 
 function getFeatureOverridesSummary() {
-  if (!state.card) return 'None';
+  if (!state.card) return 'Aucun';
   
   var overrides = [];
   var globalFeatures = getGlobalFeaturesConfig();
@@ -1285,7 +1285,7 @@ function getFeatureOverridesSummary() {
     }
   }
   
-  if (!overrides.length) return 'None';
+  if (!overrides.length) return 'Aucun';
   if (overrides.length <= 2) return overrides.join(' • ');
   
   // Show first 2 and count for others
@@ -1407,7 +1407,7 @@ function renderFeatureOverridesField() {
 
       var statusIcon = hasOverride ? '🔧' : '🌐';
       var statusSymbol = effectiveEnabled ? '✓ ' : '○ ';
-      var statusText = statusIcon + ' ' + statusSymbol + (effectiveEnabled ? 'Enabled' : 'Disabled');
+      var statusText = statusIcon + ' ' + statusSymbol + (effectiveEnabled ? 'Activé' : 'Désactivé');
 
       html += '' +
         '<div class="tp-userscript-line tp-feature-row" data-feature-key="' + def.key + '" tabindex="0">' +
@@ -1626,7 +1626,7 @@ function renderUserscriptsField() {
       // Status display with visual indicators
       var statusIcon = hasSiteOverride ? '🔧' : '🌐';
       var statusSymbol = siteEnabled ? '✓ ' : '○ ';
-      var statusText = statusIcon + ' ' + statusSymbol + (siteEnabled ? 'Enabled' : 'Disabled');
+      var statusText = statusIcon + ' ' + statusSymbol + (siteEnabled ? 'Activé' : 'Désactivé');
       
       html += '' +
         '<div class="tp-userscript-line tp-userscript-row" data-userscript-id="' + escapeHtml(scriptId) + '" tabindex="0">' +
@@ -1647,12 +1647,12 @@ function renderUserscriptsField() {
 
 function getCategoryLabel(category) {
   var labels = {
-    'accessibility': '♿ Accessibility',
-    'reading': '📖 Reading',
-    'video': '🎬 Video',
+    'accessibility': '♿ Accessibilité',
+    'reading': '📖 Lecture',
+    'video': '🎬 Vidéo',
     'navigation': '🧭 Navigation',
-    'privacy': '🔒 Privacy',
-    'experimental': '🧪 Experimental',
+    'privacy': '🔒 Confidentialité',
+    'experimental': '🧪 Expérimental',
   };
   return labels[category] || category;
 }
@@ -2750,7 +2750,7 @@ function updatePreview() {
   var scriptsEl = document.getElementById('tp-preview-userscripts');
   
   if (nameEl) {
-    nameEl.textContent = state.card.name || 'Site Name';
+    nameEl.textContent = state.card.name || 'Nom du site';
   }
   
   if (urlEl) {
@@ -2778,15 +2778,15 @@ function updatePreview() {
   }
 
   if (bundleEl) {
-    bundleEl.textContent = getSectionSummary('bundle') || 'Bundle: None';
+    bundleEl.textContent = getSectionSummary('bundle') || 'Module : aucun';
   }
 
   if (optionsEl) {
-    optionsEl.textContent = getSectionSummary('options') || 'Options: Global';
+    optionsEl.textContent = getSectionSummary('options') || 'Options : générales';
   }
 
   if (scriptsEl) {
-    scriptsEl.textContent = getSectionSummary('userscripts') || 'Scripts: None';
+    scriptsEl.textContent = getSectionSummary('userscripts') || 'Scripts : aucun';
   }
 }
 
@@ -2839,7 +2839,7 @@ function handleFetchFavicon() {
   var url = state.card.url;
   
   if (!url) {
-    showEditorToast('Enter a URL first');
+    showEditorToast('Saisis d\'abord une adresse');
     return;
   }
   

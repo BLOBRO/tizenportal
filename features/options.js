@@ -12,49 +12,49 @@
  */
 
 export var FOCUS_OUTLINE_OPTIONS = [
-  { value: 'off',    label: 'Subtle Blue' },
-  { value: 'on',     label: 'Blue Ring' },
-  { value: 'high',   label: 'Yellow Ring' },
-  { value: 'portal', label: 'Portal Style (Glow)' },
-  { value: 'white',  label: 'White Ring' },
+  { value: 'off',    label: 'Bleu discret' },
+  { value: 'on',     label: 'Anneau bleu' },
+  { value: 'high',   label: 'Anneau jaune' },
+  { value: 'portal', label: 'Style portail (halo)' },
+  { value: 'white',  label: 'Anneau blanc' },
 ];
 
 export var FOCUS_TRANSITION_MODE_OPTIONS = [
-  { value: 'slide', label: 'Slide (Directional)' },
-  { value: 'scale', label: 'Scale (Grow)' },
-  { value: 'glow',  label: 'Glow (Pulse)' },
-  { value: 'off',   label: 'Off' },
+  { value: 'slide', label: 'Glissement' },
+  { value: 'scale', label: 'Agrandissement' },
+  { value: 'glow',  label: 'Halo (pulsation)' },
+  { value: 'off',   label: 'Désactivé' },
 ];
 
 export var FOCUS_TRANSITION_SPEED_OPTIONS = [
-  { value: 'fast',   label: 'Fast (150ms)' },
-  { value: 'medium', label: 'Medium (250ms)' },
-  { value: 'slow',   label: 'Slow (400ms)' },
+  { value: 'fast',   label: 'Rapide (150 ms)' },
+  { value: 'medium', label: 'Moyenne (250 ms)' },
+  { value: 'slow',   label: 'Lente (400 ms)' },
 ];
 
 export var TEXT_SCALE_OPTIONS = [
-  { value: 'extra-small', label: 'Extra Small (75%)' },
-  { value: 'small',       label: 'Small (90%)' },
-  { value: 'off',         label: 'Normal (100%)' },
-  { value: 'medium',      label: 'Medium (115%)' },
-  { value: 'large',       label: 'Large (135%)' },
-  { value: 'extra-large', label: 'Extra Large (160%)' },
+  { value: 'extra-small', label: 'Très petit (75 %)' },
+  { value: 'small',       label: 'Petit (90 %)' },
+  { value: 'off',         label: 'Normal (100 %)' },
+  { value: 'medium',      label: 'Moyen (115 %)' },
+  { value: 'large',       label: 'Grand (135 %)' },
+  { value: 'extra-large', label: 'Très grand (160 %)' },
 ];
 
 export var NAVIGATION_MODE_OPTIONS = [
-  { value: 'geometric',   label: 'Grid Navigation (Geometric)' },
-  { value: 'directional', label: 'Smart Navigation (Directional)' },
-  { value: 'polyfill',    label: 'Legacy Polyfill (Compatibility Only)' },
+  { value: 'geometric',   label: 'Grille stricte (géométrique)' },
+  { value: 'directional', label: 'Intelligente (recommandée)' },
+  { value: 'polyfill',    label: 'Ancienne (compatibilité)' },
 ];
 
 export var VIEWPORT_OPTIONS = [
   { value: 'auto',     label: 'Auto' },
-  { value: 'locked',   label: 'Locked (1920)' },
-  { value: 'unlocked', label: 'Unlocked' },
+  { value: 'locked',   label: 'Verrouillé (1920)' },
+  { value: 'unlocked', label: 'Libre' },
 ];
 
 export var UA_MODE_OPTIONS = [
-  { value: 'tizen',   label: 'Tizen TV' },
-  { value: 'desktop', label: 'Desktop' },
+  { value: 'tizen',   label: 'TV Tizen' },
+  { value: 'desktop', label: 'Ordinateur' },
   { value: 'mobile',  label: 'Mobile' },
 ];

@@ -34,46 +34,48 @@ var prefsState = {
  * Theme mode options
  */
 var THEME_OPTIONS = [
-  { value: 'dark', label: 'Dark' },
-  { value: 'light', label: 'Light' },
-  { value: 'auto', label: 'Automatic (Sunset)' },
-  { value: 'portal', label: 'Portal (Blue & Orange)' },
-  { value: 'backdrop', label: 'Custom Backdrop' },
-  { value: 'custom', label: 'Custom Colours' },
+  { value: 'dark', label: 'Sombre' },
+  { value: 'light', label: 'Clair' },
+  { value: 'auto', label: 'Automatique (coucher du soleil)' },
+  { value: 'portal', label: 'Portail (bleu et orange)' },
+  { value: 'backdrop', label: 'Image de fond' },
+  { value: 'custom', label: 'Couleurs perso' },
+  // Fork BLOBRO: streaming-style theme, default for new installs
+  { value: 'premium', label: 'Premium' },
 ];
 
 var PORTAL_FILTER_OPTIONS = [
-  { value: 'glow', label: 'Glow' },
-  { value: 'crisp', label: 'Crisp' },
-  { value: 'flat', label: 'Flat' },
+  { value: 'glow', label: 'Halo' },
+  { value: 'crisp', label: 'Net' },
+  { value: 'flat', label: 'Uni' },
   { value: 'vignette', label: 'Vignette' },
 ];
 
 var PORTAL_ACCENT_OPTIONS = [
-  { value: 'corners', label: 'Corners' },
-  { value: 'opposite', label: 'Opposite Corners' },
-  { value: 'top', label: 'Top Arc' },
-  { value: 'bottom', label: 'Bottom Arc' },
-  { value: 'sides', label: 'Sides' },
+  { value: 'corners', label: 'Coins' },
+  { value: 'opposite', label: 'Coins opposés' },
+  { value: 'top', label: 'Arc en haut' },
+  { value: 'bottom', label: 'Arc en bas' },
+  { value: 'sides', label: 'Côtés' },
 ];
 
 /**
  * HUD position options
  */
 var HUD_OPTIONS = [
-  { value: 'off', label: 'Off' },
-  { value: 'top-right', label: 'Top Right' },
-  { value: 'top-left', label: 'Top Left' },
-  { value: 'bottom-right', label: 'Bottom Right' },
-  { value: 'bottom-left', label: 'Bottom Left' },
+  { value: 'off', label: 'Désactivé' },
+  { value: 'top-right', label: 'En haut à droite' },
+  { value: 'top-left', label: 'En haut à gauche' },
+  { value: 'bottom-right', label: 'En bas à droite' },
+  { value: 'bottom-left', label: 'En bas à gauche' },
 ];
 
 var HINT_POSITION_OPTIONS = [
-  { value: 'off', label: 'Off' },
-  { value: 'top-right', label: 'Top Right' },
-  { value: 'top-left', label: 'Top Left' },
-  { value: 'bottom-right', label: 'Bottom Right' },
-  { value: 'bottom-left', label: 'Bottom Left' },
+  { value: 'off', label: 'Désactivé' },
+  { value: 'top-right', label: 'En haut à droite' },
+  { value: 'top-left', label: 'En haut à gauche' },
+  { value: 'bottom-right', label: 'En bas à droite' },
+  { value: 'bottom-left', label: 'En bas à gauche' },
 ];
 
 
@@ -89,7 +91,7 @@ function normalizeThemeValue(value) {
     return THEME_OPTIONS[idx].value;
   }
 
-  // If string but not valid, fall back to dark
+  // If string but not valid, fall back to premium
   if (typeof value === 'string') {
     for (var i = 0; i < THEME_OPTIONS.length; i++) {
       if (THEME_OPTIONS[i].value === value) {
@@ -98,7 +100,7 @@ function normalizeThemeValue(value) {
     }
   }
 
-  return 'dark';
+  return 'premium';
 }
 
 function normalizePortalFilter(value) {
@@ -180,53 +182,53 @@ function normalizeHintsPosition(value) {
  * Note: customColor1/customColor2 are conditional rows shown only when theme='custom'
  */
 var PREFERENCE_ROWS = [
-  { id: 'theme', label: 'Theme Mode', type: 'select', options: THEME_OPTIONS, key: 'theme', config: 'portal', section: 'portal', category: 'appearance' },
-  { id: 'portalFilter', label: 'Portal Filter', type: 'select', options: PORTAL_FILTER_OPTIONS, key: 'portalFilter', config: 'portal', section: 'portal', category: 'appearance' },
-  { id: 'portalAccentPosition', label: 'Portal Accent Positions', type: 'select', options: PORTAL_ACCENT_OPTIONS, key: 'portalAccentPosition', config: 'portal', section: 'portal', category: 'appearance' },
-  { id: 'customColor1', label: 'Gradient Color 1', type: 'color', key: 'customColor1', config: 'portal', showIf: 'custom', section: 'portal', category: 'appearance' },
-  { id: 'customColor2', label: 'Gradient Color 2', type: 'color', key: 'customColor2', config: 'portal', showIf: 'custom', section: 'portal', category: 'appearance' },
-  { id: 'backgroundImage', label: 'Backdrop Image URL', type: 'text', key: 'backgroundImage', config: 'portal', showIf: 'backdrop', section: 'portal', category: 'appearance' },
-  { id: 'hudPosition', label: 'Debug HUD', type: 'select', options: HUD_OPTIONS, key: 'hudPosition', config: 'portal', section: 'portal', category: 'hints' },
-  { id: 'hintsPosition', label: 'Color Hints', type: 'select', options: HINT_POSITION_OPTIONS, key: 'hintsPosition', config: 'portal', section: 'portal', category: 'hints' },
-  { id: 'textScale', label: 'Text Scale', type: 'select', options: TEXT_SCALE_OPTIONS, key: 'textScale', config: 'features', section: 'global', category: 'appearance',
+  { id: 'theme', label: 'Thème', type: 'select', options: THEME_OPTIONS, key: 'theme', config: 'portal', section: 'portal', category: 'appearance' },
+  { id: 'portalFilter', label: 'Effet de fond', type: 'select', options: PORTAL_FILTER_OPTIONS, key: 'portalFilter', config: 'portal', section: 'portal', category: 'appearance' },
+  { id: 'portalAccentPosition', label: 'Position des reflets', type: 'select', options: PORTAL_ACCENT_OPTIONS, key: 'portalAccentPosition', config: 'portal', section: 'portal', category: 'appearance' },
+  { id: 'customColor1', label: 'Couleur 1', type: 'color', key: 'customColor1', config: 'portal', showIf: 'custom', section: 'portal', category: 'appearance' },
+  { id: 'customColor2', label: 'Couleur 2', type: 'color', key: 'customColor2', config: 'portal', showIf: 'custom', section: 'portal', category: 'appearance' },
+  { id: 'backgroundImage', label: 'Adresse de l\'image de fond', type: 'text', key: 'backgroundImage', config: 'portal', showIf: 'backdrop', section: 'portal', category: 'appearance' },
+  { id: 'hudPosition', label: 'Infos de débogage', type: 'select', options: HUD_OPTIONS, key: 'hudPosition', config: 'portal', section: 'portal', category: 'hints' },
+  { id: 'hintsPosition', label: 'Aide des boutons couleur', type: 'select', options: HINT_POSITION_OPTIONS, key: 'hintsPosition', config: 'portal', section: 'portal', category: 'hints' },
+  { id: 'textScale', label: 'Taille du texte', type: 'select', options: TEXT_SCALE_OPTIONS, key: 'textScale', config: 'features', section: 'global', category: 'appearance',
     description: 'Scale all text for improved TV legibility while maintaining relative sizing' },
-  { id: 'focusOutlineMode', label: 'Focus Outline', type: 'select', options: FOCUS_OUTLINE_OPTIONS, key: 'focusOutlineMode', config: 'features', section: 'global', category: 'navigation' },
-  { id: 'focusTransitionMode', label: 'Focus Transition Style', type: 'select', options: FOCUS_TRANSITION_MODE_OPTIONS, key: 'focusTransitionMode', config: 'features', section: 'global', category: 'navigation' },
-  { id: 'focusTransitionSpeed', label: 'Focus Transition Speed', type: 'select', options: FOCUS_TRANSITION_SPEED_OPTIONS, key: 'focusTransitionSpeed', config: 'features', section: 'global', category: 'navigation' },
-  { id: 'safeArea', label: 'TV Safe Area (5% inset)', type: 'toggle', key: 'safeArea', config: 'features', section: 'global', category: 'layout',
+  { id: 'focusOutlineMode', label: 'Cadre de sélection', type: 'select', options: FOCUS_OUTLINE_OPTIONS, key: 'focusOutlineMode', config: 'features', section: 'global', category: 'navigation' },
+  { id: 'focusTransitionMode', label: 'Animation de sélection', type: 'select', options: FOCUS_TRANSITION_MODE_OPTIONS, key: 'focusTransitionMode', config: 'features', section: 'global', category: 'navigation' },
+  { id: 'focusTransitionSpeed', label: 'Vitesse d\'animation', type: 'select', options: FOCUS_TRANSITION_SPEED_OPTIONS, key: 'focusTransitionSpeed', config: 'features', section: 'global', category: 'navigation' },
+  { id: 'safeArea', label: 'Marge de sécurité TV (5 %)', type: 'toggle', key: 'safeArea', config: 'features', section: 'global', category: 'layout',
     description: 'Inset content 5% from edges to account for TV screen overscan (applies globally including portal)' },
-  { id: 'cssReset', label: 'CSS Normalization', type: 'toggle', key: 'cssReset', config: 'features', section: 'global', category: 'layout',
+  { id: 'cssReset', label: 'Normalisation CSS', type: 'toggle', key: 'cssReset', config: 'features', section: 'global', category: 'layout',
     description: 'Apply baseline CSS resets for consistent display across Tizen browsers (applies globally)' },
-  { id: 'hideScrollbars', label: 'Hide Scrollbars', type: 'toggle', key: 'hideScrollbars', config: 'features', section: 'global', category: 'layout',
+  { id: 'hideScrollbars', label: 'Masquer les barres de défilement', type: 'toggle', key: 'hideScrollbars', config: 'features', section: 'global', category: 'layout',
     description: 'Hide native scrollbars for a cleaner TV interface (applies globally including portal)' },
-  { id: 'gpuHints', label: 'GPU Acceleration', type: 'toggle', key: 'gpuHints', config: 'features', section: 'global', category: 'performance',
+  { id: 'gpuHints', label: 'Accélération graphique', type: 'toggle', key: 'gpuHints', config: 'features', section: 'global', category: 'performance',
     description: 'Apply GPU hints to improve animation performance on constrained hardware (applies globally)' },
-  { id: 'navigationMode', label: 'Navigation Mode', type: 'select', options: NAVIGATION_MODE_OPTIONS, key: 'navigationMode', config: 'features', section: 'site', category: 'navigation' },
-  { id: 'viewportMode', label: 'Viewport Lock Mode', type: 'select', options: VIEWPORT_OPTIONS, key: 'viewportMode', config: 'features', section: 'site', category: 'navigation' },
-  { id: 'uaMode', label: 'User Agent Mode', type: 'select', options: UA_MODE_OPTIONS, key: 'uaMode', config: 'features', section: 'site', category: 'compatibility' },
-  { id: 'tabindexInjection', label: 'Auto-focusable Elements', type: 'toggle', key: 'tabindexInjection', config: 'features', section: 'site', category: 'input',
+  { id: 'navigationMode', label: 'Mode de navigation', type: 'select', options: NAVIGATION_MODE_OPTIONS, key: 'navigationMode', config: 'features', section: 'site', category: 'navigation' },
+  { id: 'viewportMode', label: 'Largeur de page', type: 'select', options: VIEWPORT_OPTIONS, key: 'viewportMode', config: 'features', section: 'site', category: 'navigation' },
+  { id: 'uaMode', label: 'Identité du navigateur', type: 'select', options: UA_MODE_OPTIONS, key: 'uaMode', config: 'features', section: 'site', category: 'compatibility' },
+  { id: 'tabindexInjection', label: 'Rendre tout sélectionnable', type: 'toggle', key: 'tabindexInjection', config: 'features', section: 'site', category: 'input',
     description: 'Automatically inject tabindex on interactive elements for remote control navigation' },
-  { id: 'scrollIntoView', label: 'Scroll into View on Focus', type: 'toggle', key: 'scrollIntoView', config: 'features', section: 'site', category: 'input',
+  { id: 'scrollIntoView', label: 'Défiler jusqu\'à la sélection', type: 'toggle', key: 'scrollIntoView', config: 'features', section: 'site', category: 'input',
     description: 'Scroll container when focused element comes into viewport' },
-  { id: 'wrapTextInputs', label: 'Protect Text Inputs', type: 'toggle', key: 'wrapTextInputs', config: 'features', section: 'site', category: 'input',
+  { id: 'wrapTextInputs', label: 'Protéger les champs de texte', type: 'toggle', key: 'wrapTextInputs', config: 'features', section: 'site', category: 'input',
     description: 'Protect text input fields from accidental remote button presses during editing' },
 ];
 
 var SECTION_DEFS = [
-  { id: 'global', label: '⚙️ Global Preferences', defaultCollapsed: true },
-  { id: 'portal', label: '🖼️ Portal Preferences', defaultCollapsed: true },
-  { id: 'site', label: '🖥️ Site Preferences', defaultCollapsed: true },
-  { id: 'userscripts', label: '📜 User Scripts', defaultCollapsed: true },
+  { id: 'global', label: '⚙️ Réglages généraux', defaultCollapsed: true },
+  { id: 'portal', label: '🖼️ Écran d\'accueil', defaultCollapsed: true },
+  { id: 'site', label: '🖥️ Sites web', defaultCollapsed: true },
+  { id: 'userscripts', label: '📜 Scripts', defaultCollapsed: true },
 ];
 
 var CATEGORY_LABELS = {
-  appearance: '🎨 Appearance',
+  appearance: '🎨 Apparence',
   navigation: '🧭 Navigation',
-  input: '⌨️ Input',
-  layout: '📐 Layout',
-  performance: '⚡ Performance',
-  compatibility: '🔧 Compatibility',
-  hints: '💡 HUD & Hints',
+  input: '⌨️ Saisie',
+  layout: '📐 Mise en page',
+  performance: '⚡ Performances',
+  compatibility: '🔧 Compatibilité',
+  hints: '💡 Aides à l\'écran',
 };
 
 var SECTION_CATEGORY_ORDER = {
@@ -265,15 +267,15 @@ function createPreferencesHTML() {
     '<div class="tp-prefs-backdrop"></div>' +
     '<div class="tp-prefs-panel">' +
       '<div class="tp-prefs-header">' +
-        '<h2 id="tp-prefs-title">Preferences</h2>' +
-        '<div class="tp-prefs-hint">Navigate with D-pad | Changes auto-save</div>' +
+        '<h2 id="tp-prefs-title">Préférences</h2>' +
+        '<div class="tp-prefs-hint">Flèches pour naviguer · OK pour changer · Enregistré automatiquement</div>' +
       '</div>' +
       '<div class="tp-prefs-body">' +
         '<div class="tp-prefs-rows" id="tp-prefs-rows"></div>' +
       '</div>' +
       '<div class="tp-prefs-footer">' +
         '<button type="button" class="tp-prefs-btn tp-prefs-btn-cancel" id="tp-prefs-cancel" tabindex="0">' +
-          'Close' +
+          'Fermer' +
         '</button>' +
       '</div>' +
     '</div>';
@@ -428,7 +430,7 @@ export function showPreferences() {
  */
 function getDefaultPortalConfig() {
   return {
-    theme: 'dark',
+    theme: 'premium',
     customColor1: '#0d1117',
     customColor2: '#161b22',
     backgroundImage: '',
@@ -488,7 +490,7 @@ function getDefaultFeaturesConfig() {
  * Get visible preference rows based on current theme setting
  */
 function getVisibleRows() {
-  var currentTheme = normalizeThemeValue(prefsState.settings.portalConfig.theme || 'dark');
+  var currentTheme = normalizeThemeValue(prefsState.settings.portalConfig.theme || 'premium');
   var visible = [];
   var deferred = [];
 
@@ -616,12 +618,12 @@ function buildUserscriptRows() {
 
 function getCategoryLabel(category) {
   var labels = {
-    'accessibility': '♿ Accessibility',
-    'reading': '📖 Reading',
-    'video': '🎬 Video',
+    'accessibility': '♿ Accessibilité',
+    'reading': '📖 Lecture',
+    'video': '🎬 Vidéo',
     'navigation': '🧭 Navigation',
-    'privacy': '🔒 Privacy',
-    'experimental': '🧪 Experimental',
+    'privacy': '🔒 Confidentialité',
+    'experimental': '🧪 Expérimental',
   };
   return labels[category] || category;
 }
@@ -714,7 +716,7 @@ function getPreferencesSectionSummary(sectionId) {
   if (sectionId === 'userscripts') {
     // Use unified query API
     var scripts = Registry.query({ type: Registry.ITEM_TYPES.USERSCRIPT });
-    if (!scripts.length) return 'No scripts registered';
+    if (!scripts.length) return 'Aucun script';
     var enabledNames = [];
     for (var s = 0; s < scripts.length; s++) {
       var script = scripts[s];
@@ -723,7 +725,7 @@ function getPreferencesSectionSummary(sectionId) {
         enabledNames.push(script.name);
       }
     }
-    return enabledNames.length > 0 ? enabledNames.join(', ') : 'None enabled';
+    return enabledNames.length > 0 ? enabledNames.join(', ') : 'Aucun activé';
   }
 
   var rows = getVisibleRows();
@@ -733,7 +735,7 @@ function getPreferencesSectionSummary(sectionId) {
     if (row.section !== sectionId) continue;
     var value = getValue(row);
     var display = formatSummaryValue(row, value);
-    summaryParts.push(row.label + ': ' + display);
+    summaryParts.push(row.label + ' : ' + display);
   }
 
   return summaryParts.join(' • ');
@@ -741,22 +743,22 @@ function getPreferencesSectionSummary(sectionId) {
 
 function formatSummaryValue(row, value) {
   if (row.type === 'toggle') {
-    return value ? 'On' : 'Off';
+    return value ? 'Activé' : 'Désactivé';
   }
   if (row.type === 'select' && row.options) {
     var label = getOptionLabel(row.options, value);
-    return label || (value || '(not set)');
+    return label || (value || '(vide)');
   }
   if (row.type === 'color') {
-    return value || '(not set)';
+    return value || '(vide)';
   }
   if (row.type === 'text') {
     if (row.id === 'backgroundImage') {
       return shortenUrl(value || '');
     }
-    return value || '(not set)';
+    return value || '(vide)';
   }
-  return value || '(not set)';
+  return value || '(vide)';
 }
 
 function getOptionLabel(options, value) {
@@ -805,7 +807,7 @@ function setValue(row, value) {
  */
 function formatDisplayValue(row, value) {
   if (row.type === 'toggle') {
-    return value ? '✓ On' : '○ Off';
+    return value ? '✓ Activé' : '○ Désactivé';
   }
   if (row.type === 'select' && row.options) {
     // Find label for current value
@@ -814,14 +816,14 @@ function formatDisplayValue(row, value) {
         return row.options[i].label;
       }
     }
-    return row.options.length ? row.options[0].label : (value || '(not set)');
+    return row.options.length ? row.options[0].label : (value || '(vide)');
   }
   if (row.type === 'color') {
     // Show color swatch indicator
-    return value ? '■ ' + value : '(not set)';
+    return value ? '■ ' + value : '(vide)';
   }
   // Text field
-  return value || '(not set)';
+  return value || '(vide)';
 }
 
 /**
@@ -1069,7 +1071,7 @@ function showColorInputPrompt(row, index) {
     onConfirm: function(value) {
       if (!isValidHexColor(value)) {
         if (window.TizenPortal && window.TizenPortal.showToast) {
-          TizenPortal.showToast('Invalid color. Use hex format like #ff0000');
+          TizenPortal.showToast('Couleur invalide. Exemple : #ff0000');
         }
         focusPreferencesRow(index);
         return;
@@ -1143,7 +1145,7 @@ function savePreferencesAuto(reason) {
   console.log('TizenPortal: Auto-saving preferences', reason || '');
 
   if (prefsState.settings.portalConfig) {
-    prefsState.settings.portalConfig.theme = normalizeThemeValue(prefsState.settings.portalConfig.theme || 'dark');
+    prefsState.settings.portalConfig.theme = normalizeThemeValue(prefsState.settings.portalConfig.theme || 'premium');
     prefsState.settings.portalConfig.portalFilter = normalizePortalFilter(prefsState.settings.portalConfig.portalFilter || 'glow');
     prefsState.settings.portalConfig.portalAccentPosition = normalizePortalAccent(prefsState.settings.portalConfig.portalAccentPosition || 'corners');
     prefsState.settings.portalConfig.hudPosition = normalizeHudPosition(prefsState.settings.portalConfig.hudPosition || 'off');
@@ -1172,10 +1174,12 @@ function savePreferencesAuto(reason) {
   applyPortalPreferences(prefsState.settings.portalConfig);
 
   // Apply feature changes immediately (text scale, focus styling, etc.)
-  featureLoader.applyFeatures(document, prefsState.settings.featuresConfig);
+  // (Text Scale is for websites only; on the portal it flattened all font sizes)
+  var portalFeatures = Object.assign({}, prefsState.settings.featuresConfig, { textScale: 'off' });
+  featureLoader.applyFeatures(document, portalFeatures);
 
   if (window.TizenPortal && window.TizenPortal.showToast) {
-    TizenPortal.showToast('Saved');
+    TizenPortal.showToast('Enregistré');
   }
 }
 
@@ -1197,7 +1201,7 @@ export function applyPortalPreferences(config) {
     config.hintsPosition = 'off';
   }
 
-  var theme = normalizeThemeValue(config.theme || 'dark');
+  var theme = normalizeThemeValue(config.theme || 'premium');
   var portalFilter = normalizePortalFilter(config.portalFilter || 'glow');
   var portalAccent = normalizePortalAccent(config.portalAccentPosition || 'corners');
 
@@ -1242,10 +1246,19 @@ export function applyPortalPreferences(config) {
         baseGradient = 'linear-gradient(135deg, #0d1117 0%, #1a2332 50%, #0d1117 100%)';
       } else if (theme === 'light') {
         baseGradient = 'linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%)';
+      } else if (theme === 'premium') {
+        baseGradient = null;
       } else {
         baseGradient = 'linear-gradient(135deg, #0d1117 0%, #161b22 50%, #0d1117 100%)';
       }
-      shell.style.background = buildPortalBackground(portalFilter, portalAccent, baseGradient, true, theme === 'light');
+      if (theme === 'premium') {
+        // Deep, quiet background with a soft warm light from the top
+        shell.style.background = 'radial-gradient(1400px 700px at 50% -10%, rgba(232, 182, 90, 0.14) 0%, rgba(232, 182, 90, 0) 60%), ' +
+          'radial-gradient(1100px 800px at 100% 100%, rgba(60, 90, 160, 0.16) 0%, rgba(60, 90, 160, 0) 60%), ' +
+          'linear-gradient(180deg, #0c0e13 0%, #07080b 100%)';
+      } else {
+        shell.style.background = buildPortalBackground(portalFilter, portalAccent, baseGradient, true, theme === 'light');
+      }
     }
   }
 
@@ -1358,7 +1371,7 @@ function applySiteTheme(theme) {
     return;
   }
 
-  var enableDark = theme === 'dark';
+  var enableDark = theme === 'dark' || theme === 'premium';
   if (!enableDark) {
     htmlEl.classList.remove('tp-dark-mode');
   } else if (!htmlEl.classList.contains('tp-dark-mode')) {
