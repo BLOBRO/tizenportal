@@ -14,6 +14,7 @@ import { showPreferences, isPreferencesOpen } from '../ui/preferences.js';
 import { getFocusedCard } from '../ui/portal.js';
 import { isPointerActive, handlePointerKeyDown, handlePointerKeyUp, togglePointer } from './pointer.js';
 import { isIMEActive, setIMEActive, getImeDismissedAt, deactivateInput } from './text-input.js';
+import { handleMediaKeyDown, handleMediaKeyUp } from './media.js';
 import {
   isSingleActionCard,
   isMultiActionCard,
@@ -222,6 +223,19 @@ function handleDirectionalArrow(direction) {
 
 
 /**
+ * Media controls are for websites only, and never while a TizenPortal menu
+ * or a text field is in use.
+ */
+function canUseMediaControls() {
+  if (window.TizenPortal && window.TizenPortal.isPortalPage) return false;
+  if (isPreferencesOpen() || isSiteEditorOpen() || isDiagnosticsPanelVisible() || isAddressBarVisible()) return false;
+  if (isIMEActive()) return false;
+  var el = document.activeElement;
+  if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable)) return false;
+  return true;
+}
+
+/**
  * Custom key handlers registered by bundles
  */
 var customHandlers = [];
@@ -292,6 +306,12 @@ function handleKeyDown(event) {
     }
 
     var isOnPortal = window.TizenPortal && window.TizenPortal.isPortalPage;
+    // Back leaves video full screen first (instead of leaving the page)
+    if (!isOnPortal && canUseMediaControls() && handleMediaKeyDown(event)) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
     if (!isOnPortal) {
       event.preventDefault();
       event.stopPropagation();
@@ -408,6 +428,14 @@ function handleKeyDown(event) {
     }
   }
 
+  // Remote media keys (Play/Pause, Stop, FF/RW) and full screen video controls
+  // on websites. Runs after bundle handlers so bundles keep priority.
+  if (canUseMediaControls() && handleMediaKeyDown(event)) {
+    event.preventDefault();
+    event.stopPropagation();
+    return;
+  }
+
   // Handle pointer mode - intercepts arrow keys and enter
   // BUT NOT when site editor is open - editor needs Enter to work
   if (isPointerActive() && !isSiteEditorOpen()) {
@@ -518,6 +546,12 @@ function handleKeyUp(event) {
   var isLongPress = duration >= LONG_PRESS_MS;
 
   delete keyDownTimes[keyCode];
+
+  if (handleMediaKeyUp(event)) {
+    event.preventDefault();
+    event.stopPropagation();
+    return;
+  }
 
   // Suppress EXIT on keyup if IME was just dismissed
   if (keyCode === KEYS.EXIT && shouldSuppressExit()) {
